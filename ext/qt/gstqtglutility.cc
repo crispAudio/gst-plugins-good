@@ -327,7 +327,7 @@ qt_opengl_native_context_from_gst_gl_context (GstGLContext * context)
                 "on wayland. See https://bugreports.qt.io/browse/QTBUG-82528");
             gst_object_unref (display_egl);
             gst_object_unref (display);
-            return QVariant::fromValue(nullptr);
+            return QVariant::fromValue(0);
 #else
             if (display_egl)
                 egl_display = (EGLDisplay) gst_gl_display_get_handle ((GstGLDisplay *) display_egl);
@@ -356,5 +356,5 @@ qt_opengl_native_context_from_gst_gl_context (GstGLContext * context)
           platform_s);
       g_free (platform_s);
     }
-    return QVariant::fromValue(nullptr);
+    return QVariant::fromValue(0);
 }
