@@ -148,6 +148,11 @@ if gst_gl_have_window_eagl and gst_gl_have_platform_eagl
   endif
 endif
 
+imx_deps = cc.find_library('gstimxcommon', required : false)
+if imx_deps.found()
+  optional_deps += [imx_deps, cc.find_library('GLESv2', required : true)]
+endif
+
 if have_qt_windowing
   # Build it!
   moc_files = qt5_mod.preprocess(moc_headers : moc_headers)

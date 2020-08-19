@@ -56,6 +56,18 @@ static GstFlowReturn gst_qt_sink_show_frame (GstVideoSink * bsink,
 static gboolean gst_qt_sink_propose_allocation (GstBaseSink * bsink,
     GstQuery * query);
 
+#if GST_GL_HAVE_VIV_DIRECTVIV
+static GstStaticPadTemplate gst_qt_sink_template =
+GST_STATIC_PAD_TEMPLATE ("sink",
+    GST_PAD_SINK,
+    GST_PAD_ALWAYS,
+    GST_STATIC_CAPS ("video/x-raw, "
+    "format = (string) RGBA, "
+    "width = " GST_VIDEO_SIZE_RANGE ", "
+    "height = " GST_VIDEO_SIZE_RANGE ", "
+    "framerate = " GST_VIDEO_FPS_RANGE ", "
+    "texture-target = (string) 2D"));
+#else
 static GstStaticPadTemplate gst_qt_sink_template =
 GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
@@ -66,6 +78,7 @@ GST_STATIC_PAD_TEMPLATE ("sink",
     "height = " GST_VIDEO_SIZE_RANGE ", "
     "framerate = " GST_VIDEO_FPS_RANGE ", "
     "texture-target = (string) 2D"));
+#endif
 
 #define DEFAULT_FORCE_ASPECT_RATIO  TRUE
 #define DEFAULT_PAR_N               0

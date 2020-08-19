@@ -54,6 +54,11 @@ private:
     GLuint dummy_tex_id_;
     GstVideoInfo v_info;
     GstVideoFrame v_frame;
+#if GST_GL_HAVE_VIV_DIRECTVIV
+    GLuint video_texture_;
+    GLvoid* viv_planes[3];
+    gboolean video_info_updated;
+#endif
 };
 
 #endif /* __GST_QSG_TEXTURE_H__ */
