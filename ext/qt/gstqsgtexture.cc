@@ -64,7 +64,7 @@ GstQSGTexture::GstQSGTexture ()
     QOpenGLFunctions *funcs = qglcontext->functions ();
     this->video_texture_ = 0;
     funcs->glGenTextures (1, &this->video_texture_);
-    funcs->glBindTexture (GL_TEXTURE_2D, this->dummy_tex_id_);
+    funcs->glBindTexture (GL_TEXTURE_2D, this->video_texture_);
     funcs->glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     funcs->glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   }
@@ -241,6 +241,8 @@ GstQSGTexture::bind ()
     GST_LOG("w/h: %u/%u total_w/h: %u/%u num extra lines: %u", w, h, total_w, total_h, num_extra_lines);
 
     QOpenGLContext::currentContext ()->functions()->glBindTexture(GL_TEXTURE_2D, this->video_texture_);
+    QOpenGLContext::currentContext ()->functions()->glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    QOpenGLContext::currentContext ()->functions()->glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     if (is_phys_buf)
     {
