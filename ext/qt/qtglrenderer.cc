@@ -12,6 +12,7 @@
 
 #include <gst/gl/gl.h>
 #include <gst/gl/gstglfuncs.h>
+#include <gst/gstobject.h>
 
 #include "qtglrenderer.h"
 #include "gstqtglutility.h"
