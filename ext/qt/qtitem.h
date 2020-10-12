@@ -78,6 +78,8 @@ public:
     void setForceAspectRatio(bool);
     bool getForceAspectRatio();
     bool itemInitialized();
+    bool isTextureProvider() const override;
+    QSGTextureProvider *textureProvider() const override;
 
     QSharedPointer<QtGLVideoItemInterface> getInterface() { return proxy; };
     /* private for C interface ... */

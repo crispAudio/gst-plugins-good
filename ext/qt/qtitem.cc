@@ -23,6 +23,7 @@
 #endif
 
 #include <stdio.h>
+#include <memory>
 
 #include <gst/video/video.h>
 #include "qtitem.h"
@@ -34,6 +35,17 @@
 #include <QtGui/QGuiApplication>
 #include <QtQuick/QQuickWindow>
 #include <QtQuick/QSGSimpleTextureNode>
+#include <QtQuick/QSGTextureProvider>
+
+class GstQSGTextureProvider: public QSGTextureProvider {
+    GstQSGTexture *mTexture;
+
+public:
+    GstQSGTextureProvider(): mTexture{new GstQSGTexture()} { };
+    ~GstQSGTextureProvider() { delete mTexture; }
+    QSGTexture* texture() const { return static_cast<QSGTexture*>(mTexture); }
+    void updateTexture() { Q_EMIT textureChanged(); }
+};
 
 /**
  * SECTION:gtkgstglwidget
@@ -78,6 +90,7 @@ struct _QtGLVideoItemPrivate
   QOpenGLContext *qt_context;
   GstGLContext *other_context;
   GstGLContext *context;
+  std::unique_ptr<GstQSGTextureProvider> mTextureProvider;
 };
 
 class InitializeSceneGraph : public QRunnable
@@ -188,12 +201,28 @@ QtGLVideoItem::itemInitialized()
   return m_openGlContextInitialized;
 }
 
+bool
+QtGLVideoItem::isTextureProvider() const
+{
+  return true;
+}
+
+QSGTextureProvider *
+QtGLVideoItem::textureProvider() const
+{
+  return this->priv->mTextureProvider.get ();
+}
+
 QSGNode *
 QtGLVideoItem::updatePaintNode(QSGNode * oldNode,
     UpdatePaintNodeData * updatePaintNodeData)
 {
   if (!m_openGlContextInitialized) {
     return oldNode;
+  }
+
+  if (!this->priv->mTextureProvider) {
+    this->priv->mTextureProvider.reset (new GstQSGTextureProvider());
   }
 
   QSGSimpleTextureNode *texNode = static_cast<QSGSimpleTextureNode *> (oldNode);
@@ -215,12 +244,13 @@ QtGLVideoItem::updatePaintNode(QSGNode * oldNode,
   if (!texNode) {
     texNode = new QSGSimpleTextureNode ();
     texNode->setOwnsTexture (true);
-    texNode->setTexture (new GstQSGTexture ());
+    texNode->setTexture (this->priv->mTextureProvider->texture ());
   }
 
   tex = static_cast<GstQSGTexture *> (texNode->texture());
   tex->setCaps (this->priv->caps);
   tex->setBuffer (this->priv->buffer);
+  this->priv->mTextureProvider->updateTexture ();
   texNode->markDirty(QSGNode::DirtyMaterial);
 
   if (this->priv->force_aspect_ratio) {
