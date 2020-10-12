@@ -80,6 +80,9 @@ struct _QtGLVideoItemPrivate
   gint display_width;
   gint display_height;
 
+  int video_width_;
+  int video_height_;
+
   gboolean negotiated;
   GstBuffer *buffer;
   GstCaps *caps;
@@ -211,6 +214,34 @@ QSGTextureProvider *
 QtGLVideoItem::textureProvider() const
 {
   return this->priv->mTextureProvider.get ();
+}
+
+int QtGLVideoItem::videoWidth() const
+{
+    return this->priv->video_width_;
+}
+
+void QtGLVideoItem::setVideoWidth(int value)
+{
+    if (this->priv->video_width_ != value)
+    {
+        this->priv->video_width_ = value;
+        Q_EMIT videoWidthChanged();
+    }
+}
+
+int QtGLVideoItem::videoHeight() const
+{
+    return this->priv->video_height_;
+}
+
+void QtGLVideoItem::setVideoHeight(int value)
+{
+    if (this->priv->video_height_ != value)
+    {
+        this->priv->video_height_ = value;
+        Q_EMIT videoHeightChanged();
+    }
 }
 
 QSGNode *
@@ -445,6 +476,9 @@ _calculate_par (QtGLVideoItem * widget, GstVideoInfo * info)
 
   if (!ok)
     return FALSE;
+
+  widget->setVideoWidth(width);
+  widget->setVideoHeight(height);
 
   GST_LOG ("%p PAR: %u/%u DAR:%u/%u", widget, par_n, par_d, display_par_n,
       display_par_d);
