@@ -61,12 +61,7 @@ static GstStaticPadTemplate gst_qt_sink_template =
 GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
     GST_PAD_ALWAYS,
-    GST_STATIC_CAPS ("video/x-raw, "
-    "format = (string) RGBA, "
-    "width = " GST_VIDEO_SIZE_RANGE ", "
-    "height = " GST_VIDEO_SIZE_RANGE ", "
-    "framerate = " GST_VIDEO_FPS_RANGE ", "
-    "texture-target = (string) 2D"));
+    GST_STATIC_CAPS(GST_VIDEO_CAPS_MAKE("{ I420, YV12, YV21, NV12, NV21, UYVY, RGB16, RGBA, BGRA, RGBx, BGRx, BGR, ARGB, ABGR, xRGB, xBGR }")));
 #else
 static GstStaticPadTemplate gst_qt_sink_template =
 GST_STATIC_PAD_TEMPLATE ("sink",
