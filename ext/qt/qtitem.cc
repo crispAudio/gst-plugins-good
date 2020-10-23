@@ -37,14 +37,15 @@
 #include <QtQuick/QSGSimpleTextureNode>
 #include <QtQuick/QSGTextureProvider>
 
-class GstQSGTextureProvider: public QSGTextureProvider {
-    GstQSGTexture *mTexture;
+class GstQSGTextureProvider: public QSGTextureProvider
+{
+  GstQSGTexture *mTexture;
 
 public:
-    GstQSGTextureProvider(): mTexture{new GstQSGTexture()} { };
-    ~GstQSGTextureProvider() { delete mTexture; }
-    QSGTexture* texture() const { return static_cast<QSGTexture*>(mTexture); }
-    void updateTexture() { Q_EMIT textureChanged(); }
+  GstQSGTextureProvider(): mTexture{new GstQSGTexture ()} { };
+  ~GstQSGTextureProvider() { delete mTexture; }
+  QSGTexture* texture() const { return static_cast<QSGTexture *> (mTexture); }
+  void updateTexture() { Q_EMIT textureChanged (); }
 };
 
 /**
@@ -79,9 +80,6 @@ struct _QtGLVideoItemPrivate
 
   gint display_width;
   gint display_height;
-
-  int video_width_;
-  int video_height_;
 
   gboolean negotiated;
   GstBuffer *buffer;
@@ -216,34 +214,6 @@ QtGLVideoItem::textureProvider() const
   return this->priv->mTextureProvider.get ();
 }
 
-int QtGLVideoItem::videoWidth() const
-{
-    return this->priv->video_width_;
-}
-
-void QtGLVideoItem::setVideoWidth(int value)
-{
-    if (this->priv->video_width_ != value)
-    {
-        this->priv->video_width_ = value;
-        Q_EMIT videoWidthChanged();
-    }
-}
-
-int QtGLVideoItem::videoHeight() const
-{
-    return this->priv->video_height_;
-}
-
-void QtGLVideoItem::setVideoHeight(int value)
-{
-    if (this->priv->video_height_ != value)
-    {
-        this->priv->video_height_ = value;
-        Q_EMIT videoHeightChanged();
-    }
-}
-
 QSGNode *
 QtGLVideoItem::updatePaintNode(QSGNode * oldNode,
     UpdatePaintNodeData * updatePaintNodeData)
@@ -253,7 +223,7 @@ QtGLVideoItem::updatePaintNode(QSGNode * oldNode,
   }
 
   if (!this->priv->mTextureProvider) {
-    this->priv->mTextureProvider.reset (new GstQSGTextureProvider());
+    this->priv->mTextureProvider.reset (new GstQSGTextureProvider ());
   }
 
   QSGSimpleTextureNode *texNode = static_cast<QSGSimpleTextureNode *> (oldNode);
@@ -477,8 +447,8 @@ _calculate_par (QtGLVideoItem * widget, GstVideoInfo * info)
   if (!ok)
     return FALSE;
 
-  widget->setVideoWidth(width);
-  widget->setVideoHeight(height);
+  widget->setImplicitWidth (width);
+  widget->setImplicitHeight (height);
 
   GST_LOG ("%p PAR: %u/%u DAR:%u/%u", widget, par_n, par_d, display_par_n,
       display_par_d);

@@ -69,15 +69,9 @@ class QtGLVideoItem : public QQuickItem, protected QOpenGLFunctions
                READ itemInitialized
                NOTIFY itemInitializedChanged)
 
-    Q_PROPERTY(int videoWidth
-               READ videoWidth
-               WRITE setVideoWidth
-               NOTIFY videoWidthChanged)
-
-    Q_PROPERTY(int videoHeight
-               READ videoHeight
-               WRITE setVideoHeight
-               NOTIFY videoHeightChanged)
+    Q_PROPERTY(int isTextureProvider
+               READ isTextureProvider
+               CONSTANT)
 
 public:
     QtGLVideoItem();
@@ -89,10 +83,6 @@ public:
     bool getForceAspectRatio();
     bool itemInitialized();
     bool isTextureProvider() const override;
-    int videoWidth() const;
-    void setVideoWidth(int value);
-    int videoHeight() const;
-    void setVideoHeight(int value);
     QSGTextureProvider *textureProvider() const override;
 
     QSharedPointer<QtGLVideoItemInterface> getInterface() { return proxy; };
@@ -101,8 +91,6 @@ public:
 
 Q_SIGNALS:
     void itemInitializedChanged();
-    void videoWidthChanged();
-    void videoHeightChanged();
 
 private Q_SLOTS:
     void handleWindowChanged(QQuickWindow * win);
